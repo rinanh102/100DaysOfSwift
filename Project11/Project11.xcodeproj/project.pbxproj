@@ -15,6 +15,8 @@
 		0735084A22429D340056B3AC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0735084822429D340056B3AC /* Main.storyboard */; };
 		0735084C22429D350056B3AC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0735084B22429D350056B3AC /* Assets.xcassets */; };
 		0735084F22429D350056B3AC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0735084D22429D350056B3AC /* LaunchScreen.storyboard */; };
+		075E3AC82245711D0095353D /* FireParticles.sks in Resources */ = {isa = PBXBuildFile; fileRef = 075E3AC72245711D0095353D /* FireParticles.sks */; };
+		075E3ACA224691350095353D /* FireParticles2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 075E3AC9224691350095353D /* FireParticles2.sks */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		0735084B22429D350056B3AC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0735084E22429D350056B3AC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0735085022429D350056B3AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		075E3AC72245711D0095353D /* FireParticles.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = FireParticles.sks; sourceTree = "<group>"; };
+		075E3AC9224691350095353D /* FireParticles2.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = FireParticles2.sks; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +71,8 @@
 				0735084622429D340056B3AC /* GameViewController.swift */,
 				0735084822429D340056B3AC /* Main.storyboard */,
 				0735084B22429D350056B3AC /* Assets.xcassets */,
+				075E3AC72245711D0095353D /* FireParticles.sks */,
+				075E3AC9224691350095353D /* FireParticles2.sks */,
 				0735084D22429D350056B3AC /* LaunchScreen.storyboard */,
 				0735085022429D350056B3AC /* Info.plist */,
 			);
@@ -134,6 +140,8 @@
 				0735084A22429D340056B3AC /* Main.storyboard in Resources */,
 				0735084122429D340056B3AC /* GameScene.sks in Resources */,
 				0735084C22429D350056B3AC /* Assets.xcassets in Resources */,
+				075E3AC82245711D0095353D /* FireParticles.sks in Resources */,
+				075E3ACA224691350095353D /* FireParticles2.sks in Resources */,
 				0735084F22429D350056B3AC /* LaunchScreen.storyboard in Resources */,
 				0735084322429D340056B3AC /* Actions.sks in Resources */,
 			);
