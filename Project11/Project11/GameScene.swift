@@ -38,7 +38,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     var colorBall = ["ballYellow", "ballRed", "ballPurple", "ballGrey", "ballBlue", "ballGreen", "ballCyan"]
-//    var box = SKSpriteNode?.self
+    var box : SKSpriteNode!
     
     override func didMove(to view: SKView) {
     let background = SKSpriteNode(imageNamed: "background")
@@ -99,12 +99,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 numberBall = 5
                 newGameLabel.removeFromParent()
                 gameOverLabel.removeFromParent()
-                
+//                box.removeFromParent()
             } else {
                 if editingMode{
                     //TODO: Create box
                     let size = CGSize(width: Int.random(in: 16...128), height: 16)
-                    let box = SKSpriteNode(color: UIColor(red: CGFloat.random(in: 0...1), green: CGFloat.random(in: 0...1), blue: CGFloat.random(in: 0...1), alpha: 1), size: size)
+                    box = SKSpriteNode(color: UIColor(red: CGFloat.random(in: 0...1), green: CGFloat.random(in: 0...1), blue: CGFloat.random(in: 0...1), alpha: 1), size: size)
                     box.zRotation = CGFloat.random(in: 0...3)
                     box.position = location
                     box.physicsBody = SKPhysicsBody(rectangleOf: box.size)
