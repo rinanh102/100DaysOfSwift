@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07B619A82259215F009BCAEF /* gameover.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 07B619A72259215E009BCAEF /* gameover.mp3 */; };
+		07B619AC22592E13009BCAEF /* FireParticles2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 07B619AB22592E13009BCAEF /* FireParticles2.sks */; };
 		07D6A2C9225526CE00EA68B3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D6A2C8225526CE00EA68B3 /* AppDelegate.swift */; };
 		07D6A2CB225526CE00EA68B3 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 07D6A2CA225526CE00EA68B3 /* GameScene.sks */; };
 		07D6A2CF225526CE00EA68B3 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D6A2CE225526CE00EA68B3 /* GameScene.swift */; };
@@ -20,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		07B619A72259215E009BCAEF /* gameover.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = gameover.mp3; sourceTree = "<group>"; };
+		07B619AB22592E13009BCAEF /* FireParticles2.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = FireParticles2.sks; path = ../../Project11/Project11/FireParticles2.sks; sourceTree = "<group>"; };
 		07D6A2C5225526CE00EA68B3 /* Project14.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Project14.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		07D6A2C8225526CE00EA68B3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		07D6A2CA225526CE00EA68B3 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -67,14 +71,16 @@
 				07D6A2C8225526CE00EA68B3 /* AppDelegate.swift */,
 				07D6A2CA225526CE00EA68B3 /* GameScene.sks */,
 				07D6A2CE225526CE00EA68B3 /* GameScene.swift */,
-				07D6A2D0225526CE00EA68B3 /* GameViewController.swift */,
 				07D6A2E42255323300EA68B3 /* WhackSlot.swift */,
+				07D6A2D0225526CE00EA68B3 /* GameViewController.swift */,
 				07D6A2D2225526CE00EA68B3 /* Main.storyboard */,
 				07D6A2D5225526D200EA68B3 /* Assets.xcassets */,
 				07D6A2D7225526D200EA68B3 /* LaunchScreen.storyboard */,
 				07D6A2DA225526D200EA68B3 /* Info.plist */,
 				07D6A2E0225527E900EA68B3 /* whack.caf */,
 				07D6A2E1225527E900EA68B3 /* whackBad.caf */,
+				07B619A72259215E009BCAEF /* gameover.mp3 */,
+				07B619AB22592E13009BCAEF /* FireParticles2.sks */,
 			);
 			path = Project14;
 			sourceTree = "<group>";
@@ -137,6 +143,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07B619AC22592E13009BCAEF /* FireParticles2.sks in Resources */,
+				07B619A82259215F009BCAEF /* gameover.mp3 in Resources */,
 				07D6A2D4225526CE00EA68B3 /* Main.storyboard in Resources */,
 				07D6A2E2225527E900EA68B3 /* whack.caf in Resources */,
 				07D6A2CB225526CE00EA68B3 /* GameScene.sks in Resources */,

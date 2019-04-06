@@ -22,12 +22,12 @@ class WhackSlot: SKNode {
         addChild(sprite)
         
         let cropNode = SKCropNode()
-        cropNode.position = CGPoint(x: 0, y: 15)
+        cropNode.position = CGPoint(x: 0, y: 15)//15
         cropNode.zPosition = 1
         cropNode.maskNode = SKSpriteNode(imageNamed: "whackMask")
         
         charNode = SKSpriteNode(imageNamed: "penguinGood")
-        charNode.position = CGPoint(x: 0, y: -90)
+        charNode.position = CGPoint(x: 0, y: -90)//-90
         charNode.name = "character"
         cropNode.addChild(charNode)
         
@@ -37,6 +37,9 @@ class WhackSlot: SKNode {
     func show(hideTime: Double){
         //if the penguin is visible
         if isVisible { return }
+        
+        charNode.xScale = 1
+        charNode.yScale = 1
         
         //TODO: show the penguin from underneath the hole
         charNode.run(SKAction.moveBy(x: 0, y: 80, duration: 0.05))
@@ -62,5 +65,23 @@ class WhackSlot: SKNode {
         
         charNode.run(SKAction.moveBy(x: 0, y: -80, duration: 0.05))
         isVisible = false
+    }
+    
+    func hit(){
+        isHit = true
+        
+        let delay = SKAction.wait(forDuration: 0.25)
+        let hide = SKAction.moveBy(x: 0, y: -80, duration: 0.5)
+        let notVisible = SKAction.run {
+            [unowned self] in
+            self.isVisible = false
+        }
+        
+        guard let smokeEffect = SKEmitterNode(fileNamed: "FireParticles2") else { return }
+        smokeEffect.position = CGPoint(x: 0, y: 10)
+        smokeEffect.zPosition = 1
+        addChild(smokeEffect)
+        
+        charNode.run(SKAction.sequence([delay, hide, notVisible]))
     }
 }
