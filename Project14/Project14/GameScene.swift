@@ -83,7 +83,7 @@ class GameScene: SKScene {
         
         numRounds += 1
         
-        if numRounds >= 10{
+        if numRounds >= 30{
             for slot in slots{
                 slot.hide()
             }
