@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		073F352C226B6420003553CD /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073F352B226B6420003553CD /* WebViewController.swift */; };
 		07D67682225FA78F0085404F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D67681225FA78F0085404F /* AppDelegate.swift */; };
 		07D67684225FA78F0085404F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D67683225FA78F0085404F /* ViewController.swift */; };
 		07D67687225FA78F0085404F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 07D67685225FA78F0085404F /* Main.storyboard */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		073F352B226B6420003553CD /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		07D6767E225FA78F0085404F /* Project16.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Project16.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		07D67681225FA78F0085404F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		07D67683225FA78F0085404F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -59,6 +61,7 @@
 				07D67681225FA78F0085404F /* AppDelegate.swift */,
 				07D67683225FA78F0085404F /* ViewController.swift */,
 				07D67693225FB4150085404F /* Capital.swift */,
+				073F352B226B6420003553CD /* WebViewController.swift */,
 				07D67685225FA78F0085404F /* Main.storyboard */,
 				07D67688225FA7910085404F /* Assets.xcassets */,
 				07D6768A225FA7910085404F /* LaunchScreen.storyboard */,
@@ -141,6 +144,7 @@
 				07D67684225FA78F0085404F /* ViewController.swift in Sources */,
 				07D67682225FA78F0085404F /* AppDelegate.swift in Sources */,
 				07D67694225FB4150085404F /* Capital.swift in Sources */,
+				073F352C226B6420003553CD /* WebViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

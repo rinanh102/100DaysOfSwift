@@ -21,15 +21,20 @@ class ViewController: UIViewController, MKMapViewDelegate {
         let washington = Capital(title: "Washington DC", coordinate: CLLocationCoordinate2D(latitude: 38.895111, longitude: -77.036667), info: "Named after George himself.")
         
         mapView.addAnnotations([london, oslo, paris, rome, washington])
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "map"), style: .plain, target: self, action: #selector(changeMapType))
+        
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        // 1
+        // 1 If the annotation isn't from a capital city, it must return nil so iOS uses a default view.
         guard annotation is Capital else { return nil }
         //2
         let identifier = "Capital"
             //3
-            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        //TODO: challenges 1
+            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
+            annotationView?.pinTintColor = .green
             //4
         if annotationView == nil {
             annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
@@ -38,9 +43,11 @@ class ViewController: UIViewController, MKMapViewDelegate {
             //5
             let btn = UIButton(type : .detailDisclosure)
             annotationView?.rightCalloutAccessoryView = btn
+            annotationView?.pinTintColor = .blue
         } else {
             //6
             annotationView?.annotation = annotation
+            annotationView?.pinTintColor = .yellow
         }
         return annotationView
     }
@@ -48,14 +55,46 @@ class ViewController: UIViewController, MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         guard let capital = view.annotation as? Capital else { return }
         let placeName = capital.title
-        let placeInfo = capital.info
+//        let placeInfo = capital.info
         
-        let alert = UIAlertController(title: placeName, message: placeInfo, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        if let vc = storyboard?.instantiateViewController(withIdentifier: "webView") as? WebViewController{
+            vc.selecttedCapital = placeName
+            navigationController?.pushViewController(vc, animated: true)
+        }
         
-        present(alert, animated:  true)
+        
+//        let alert = UIAlertController(title: placeName, message: placeInfo, preferredStyle: .alert)
+//        alert.addAction(UIAlertAction(title: "OK", style: .default))
+//
+//        present(alert, animated:  true)
     }
-
-
+    @objc func changeMapType(){
+        let alert = UIAlertController(title: "Choose Map Type", message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Satellite", style: .default){
+            //[weak mapView]
+            _ in
+            self.mapView?.mapType = MKMapType.satellite
+        })
+        alert.addAction(UIAlertAction(title: "Hybrid", style: .default){
+            //[weak mapView]
+            _ in
+            self.mapView?.mapType = MKMapType.hybrid
+        })
+        alert.addAction(UIAlertAction(title: "Satellite Flyover", style: .default){
+            //[weak mapView]
+            _ in
+            self.mapView?.mapType = MKMapType.satelliteFlyover
+        })
+        alert.addAction(UIAlertAction(title: "Standard", style: .default){
+            //[weak mapView]
+            _ in
+            self.mapView?.mapType = MKMapType.mutedStandard
+        })
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        present(alert, animated: true)
+    }
 }
+
 
