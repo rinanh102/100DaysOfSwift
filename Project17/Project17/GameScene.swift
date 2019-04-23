@@ -18,6 +18,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let possibleEmenies = ["ball", "hammer", "tv"]
     var isGameOver = false
     var gameTimer : Timer?
+    var enemyTimeInterval = 1.0
+    var enemyGenerated = 0
     
     var score = 0 {
         didSet{
@@ -34,6 +36,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(starfield)
         starfield.zPosition = -1
         
+        
         player = SKSpriteNode(imageNamed: "player")
         player.position = CGPoint(x: 100, y: 384)
         player.physicsBody = SKPhysicsBody(texture: player.texture!, size: player.size)
@@ -45,32 +48,52 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.horizontalAlignmentMode = .left
         addChild(scoreLabel)
         
+        
         score = 0
         
         physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         physicsWorld.contactDelegate = self
+     
         
-        gameTimer = Timer.scheduledTimer(timeInterval: 0.35, target: self, selector: #selector(createEnemy), userInfo: nil, repeats: true)
-        
-        
+               startTimer()
     }
     @objc func createEnemy(){
-        guard let enemy = possibleEmenies.randomElement() else { return }
-        
-        let sprite = SKSpriteNode(imageNamed: enemy)
-        sprite.position = CGPoint(x: 1200, y: Int.random(in: 20...736))
-        addChild(sprite)
-        
-        // use per-pixel collision
-        sprite.physicsBody = SKPhysicsBody(texture: sprite.texture!, size: sprite.size)
-        sprite.physicsBody?.categoryBitMask = 1
-        sprite.physicsBody?.velocity = CGVector(dx: -500, dy: 0)
-        sprite.physicsBody?.angularVelocity = 5
-        sprite.physicsBody?.linearDamping = 0 // keep moving, not slowing down
-        sprite.physicsBody?.angularDamping = 0
-        
+        if !isGameOver {
+            guard let enemy = possibleEmenies.randomElement() else { return }
+            
+            let sprite = SKSpriteNode(imageNamed: enemy)
+            sprite.position = CGPoint(x: 1200, y: Int.random(in: 20...736))
+            addChild(sprite)
+            
+            // use per-pixel collision
+            sprite.physicsBody = SKPhysicsBody(texture: sprite.texture!, size: sprite.size)
+            sprite.physicsBody?.categoryBitMask = 1 //Category bitmasks describe what kind of object the physics body is
+            // Apply force in the left direction
+            sprite.physicsBody?.velocity = CGVector(dx: -150, dy: 0)
+            
+            // Apply spin
+            sprite.physicsBody?.angularVelocity = 5
+            
+            // How fast things slow down over time: 0 never
+            sprite.physicsBody?.linearDamping = 0
+            
+            // How fast things stop rotating over time: 0 never
+            sprite.physicsBody?.angularDamping = 0
+            
+            //TODO: Challenges 2:  after 20 enemies have been made subtract 0.1 seconds
+            enemyGenerated += 1
+            if enemyGenerated.isMultiple(of: 20){
+                enemyTimeInterval -= 0.1
+                startTimer()
+        }
+            
+       
+        }
     }
+    
     //MARK: when propertis are updated
+    // The update() method is called once every frame, and lets us make changes to our game.
+   // Try not to do too much work, because it can slow your game down.
     override func update(_ currentTime: TimeInterval) {
         for node in children{
             if node.position.x < -300{
@@ -80,8 +103,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if !isGameOver{
             score += 1
         }
+        
     }
-    
+    // touchesMoved() is called when an existing touch changes position
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return } // Using Set makes UITouch unique
         var location = touch.location(in: self) // figure out where on the screen user touched
@@ -100,6 +124,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         player.removeFromParent()
         isGameOver = true
+    }
+    
+    //MARK: challenges 1
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+
+      
+    }
+    
+    //MARK: Challenge 2
+    func startTimer(){
+      
+        gameTimer?.invalidate()
+        gameTimer = Timer.scheduledTimer(timeInterval: enemyTimeInterval, target: self, selector: #selector(createEnemy), userInfo: nil, repeats: true)
+      
     }
     
 }
