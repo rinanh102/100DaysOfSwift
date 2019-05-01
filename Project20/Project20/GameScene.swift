@@ -28,6 +28,7 @@ class GameScene: SKScene {
             scoreLabel.text = "Score: \(score)"
         }
     }
+    var numberOfLanuch = 0
 
     
     override func didMove(to view: SKView) {
@@ -50,46 +51,53 @@ class GameScene: SKScene {
         
         //TODO: start up Timer
         // timer carry on till we call it to stop
-        gameTimer = Timer.scheduledTimer(timeInterval: 6, target: self, selector: #selector(launchFireworks), userInfo: nil, repeats: true)
+        startTimer()
+      
         
     }
     
     @objc func launchFireworks(){
         //TODO: four types of firework spreads
-        let movementAmount: CGFloat = 1800
+//        if numberOfLanuch < 10 {
+            let movementAmount: CGFloat = 1800
+            numberOfLanuch += 1
+            switch Int.random(in: 0...3) {
+            case 0:
+                // Straight up
+                createFirework(xMovement: 0, x: 512, y: bottomEdge)
+                createFirework(xMovement: 0, x: 512 - 100, y: bottomEdge)
+                createFirework(xMovement: 0, x: 512 - 200, y: bottomEdge)
+                createFirework(xMovement: 0, x: 512 + 100, y: bottomEdge)
+                createFirework(xMovement: 0, x: 512 + 200, y: bottomEdge)
+            case 1:
+                // in a fan
+                createFirework(xMovement: 0, x: 512, y: bottomEdge)
+                createFirework(xMovement: 200, x: 512 + 200, y: bottomEdge)
+                createFirework(xMovement: 100, x: 512 + 100, y: bottomEdge)
+                createFirework(xMovement: -100, x: 512 - 100, y: bottomEdge)
+                createFirework(xMovement: -200, x: 512 - 200, y: bottomEdge)
+            case 2:
+                //left to right
+                createFirework(xMovement: movementAmount, x: leftEdge, y: bottomEdge + 400)
+                createFirework(xMovement: movementAmount, x: leftEdge, y: bottomEdge + 300)
+                createFirework(xMovement: movementAmount, x: leftEdge, y: bottomEdge + 200)
+                createFirework(xMovement: movementAmount, x: leftEdge, y: bottomEdge + 100)
+                createFirework(xMovement: movementAmount, x: leftEdge, y: bottomEdge)
+            case 3:
+                // right to left
+                createFirework(xMovement: -movementAmount, x: rightEdge, y: bottomEdge + 400)
+                createFirework(xMovement: -movementAmount, x: rightEdge, y: bottomEdge + 300)
+                createFirework(xMovement: -movementAmount, x: rightEdge, y: bottomEdge + 200)
+                createFirework(xMovement: -movementAmount, x: rightEdge, y: bottomEdge + 100)
+                createFirework(xMovement: -movementAmount, x: rightEdge, y: bottomEdge)
+                
+            default:
+                break
         
-        switch Int.random(in: 0...3) {
-        case 0:
-            // Straight up
-            createFirework(xMovement: 0, x: 512, y: bottomEdge)
-            createFirework(xMovement: 0, x: 512 - 100, y: bottomEdge)
-            createFirework(xMovement: 0, x: 512 - 200, y: bottomEdge)
-            createFirework(xMovement: 0, x: 512 + 100, y: bottomEdge)
-            createFirework(xMovement: 0, x: 512 + 200, y: bottomEdge)
-        case 1:
-            // in a fan
-            createFirework(xMovement: 0, x: 512, y: bottomEdge)
-            createFirework(xMovement: 200, x: 512 + 200, y: bottomEdge)
-            createFirework(xMovement: 100, x: 512 + 100, y: bottomEdge)
-            createFirework(xMovement: -100, x: 512 - 100, y: bottomEdge)
-            createFirework(xMovement: -200, x: 512 - 200, y: bottomEdge)
-        case 2:
-            //left to right
-            createFirework(xMovement: movementAmount, x: leftEdge, y: bottomEdge + 400)
-            createFirework(xMovement: movementAmount, x: leftEdge, y: bottomEdge + 300)
-            createFirework(xMovement: movementAmount, x: leftEdge, y: bottomEdge + 200)
-            createFirework(xMovement: movementAmount, x: leftEdge, y: bottomEdge + 100)
-            createFirework(xMovement: movementAmount, x: leftEdge, y: bottomEdge)
-        case 3:
-            // right to left
-            createFirework(xMovement: -movementAmount, x: rightEdge, y: bottomEdge + 400)
-            createFirework(xMovement: -movementAmount, x: rightEdge, y: bottomEdge + 300)
-            createFirework(xMovement: -movementAmount, x: rightEdge, y: bottomEdge + 200)
-            createFirework(xMovement: -movementAmount, x: rightEdge, y: bottomEdge + 100)
-            createFirework(xMovement: -movementAmount, x: rightEdge, y: bottomEdge)
-        
-        default:
-            break
+        }
+        //Challenge 2
+        if numberOfLanuch < 10 {
+            startTimer()
         }
         
     }
@@ -125,7 +133,7 @@ class GameScene: SKScene {
         path.addLine(to: CGPoint(x: xMovement, y: 1000))
         
         //TODO: Tell the container node to follow that path, turning itself as needed.
-        let move = SKAction.follow(path.cgPath, asOffset: true, orientToPath: true, speed: 100)
+        let move = SKAction.follow(path.cgPath, asOffset: true, orientToPath: true, speed: 200)
         // add the action to the list that node will execute
         node.run(move)
         //TODO: Create particles behind the rocket to make it look like the fireworks are lit.
@@ -186,11 +194,19 @@ class GameScene: SKScene {
     //MARK: Explode the single firework
     //  it creates an explosion where the firework was, then removes the firework from the game scene.
     func explode(firework: SKNode){
-        if let emitter = SKEmitterNode(fileNamed: "explode"){
+        guard let emitter = SKEmitterNode(fileNamed: "explode") else { return }
             emitter.position = firework.position
             addChild(emitter)
-        }
+        
         firework.removeFromParent()
+        
+        // Challenge 3: Use the waitForDuration and removeFromParent actions in a sequence to make sure explosion particle emitters are removed from the game scene when they are finished.
+        let remove = SKAction.run {
+            emitter.removeFromParent()
+        }
+        
+        emitter.run(SKAction.sequence([SKAction.wait(forDuration: 2), remove]))
+        
     }
     
     //
@@ -222,7 +238,11 @@ class GameScene: SKScene {
         default:
             score += 4000
         }
-        
-        
+    }
+    
+    //Challenge 2
+    func startTimer(){
+        gameTimer?.invalidate()
+        gameTimer = Timer.scheduledTimer(timeInterval: 6, target: self, selector: #selector(launchFireworks), userInfo: nil, repeats: false)
     }
 }
