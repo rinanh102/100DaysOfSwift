@@ -15,7 +15,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         super.viewDidLoad()
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Regiter", style: .plain, target: self, action: #selector(registerLocal))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Schedule", style: .plain, target: self, action: #selector(scheduleLocal))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Schedule", style: .plain, target: self, action: #selector(scheduleLocalTapped))
         
     }
     
@@ -36,7 +36,10 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     }
     
     // content (what to show), a trigger (when to show it), and a request (the combination of content and trigger.)
-    @objc func scheduleLocal(){
+    @objc func scheduleLocalTapped(){
+        scheduleLocal(time: 5)
+    }
+     func scheduleLocal(time: Double = 5.0){
         registerCategories()
         
         let center = UNUserNotificationCenter.current()
@@ -48,7 +51,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         dateCompinents.minute = 20
 //        let trigger = UNCalendarNotificationTrigger(dateMatching: dateCompinents, repeats: true)
         
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: TimeInterval(time), repeats: false)
         
         let content = UNMutableNotificationContent()
         content.title = "Good morning!"
@@ -77,10 +80,12 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
         let show1 = UNNotificationAction(identifier: "action1", title: "Show more...", options: .foreground)
         // MARK: Challenge 1
         let show2 = UNNotificationAction(identifier: "action2", title: "Tell me more...", options: .foreground)
+        //MAKR: Challenge 2
+        let alarm = UNNotificationAction(identifier: "action3", title: "Remind me later", options: .foreground)
 //Once you have as many actions as you want, you group them together into a single UNNotificationCategory and give it the same identifier you used with a notification.
         //Notification categories let us attach buttons to our notifications.
         //Each button can have its own action attached to it for custom behavior.
-        let category = UNNotificationCategory(identifier: "alarm", actions: [show1, show2], intentIdentifiers: [], options: [])
+        let category = UNNotificationCategory(identifier: "alarm", actions: [show1, show2, alarm], intentIdentifiers: [], options: [])
         center.setNotificationCategories([category])
     }
     
@@ -101,6 +106,10 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
                 setAlert(title: "Show action 1", message: "Hello!!!")
             case "action2":
                 setAlert(title: "Show action 2", message: "Hello!!!")
+            //CHAllenge 2: Remind me later
+            case "action3":
+                // 2s for testing , not 24hours
+                scheduleLocal(time: 2)
                 
             default:
                 break
