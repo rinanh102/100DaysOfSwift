@@ -74,11 +74,13 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
 //        An identifier, which is a unique text string that gets sent to you when the button is tapped.
 //        A title, which is what user’s see in the interface.
 //        Options, which describe any special options that relate to the action. You can choose from .authenticationRequired, .destructive, and .foreground.
-        let show = UNNotificationAction(identifier: "show", title: "Show more...", options: .foreground)
+        let show1 = UNNotificationAction(identifier: "action1", title: "Show more...", options: .foreground)
+        // MARK: Challenge 1
+        let show2 = UNNotificationAction(identifier: "action2", title: "Tell me more...", options: .foreground)
 //Once you have as many actions as you want, you group them together into a single UNNotificationCategory and give it the same identifier you used with a notification.
         //Notification categories let us attach buttons to our notifications.
         //Each button can have its own action attached to it for custom behavior.
-        let category = UNNotificationCategory(identifier: "alarm", actions: [show], intentIdentifiers: [], options: [])
+        let category = UNNotificationCategory(identifier: "alarm", actions: [show1, show2], intentIdentifiers: [], options: [])
         center.setNotificationCategories([category])
     }
     
@@ -93,16 +95,25 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
             case UNNotificationDefaultActionIdentifier:
                 //the user swipe to unlock
                 print("Default identifier")
-                
-            case "show":
+            //MARK: Challenge 1
+            case "action1":
                 // the user tapped our "Show more.." button
-                print("Show more INFO")
+                setAlert(title: "Show action 1", message: "Hello!!!")
+            case "action2":
+                setAlert(title: "Show action 2", message: "Hello!!!")
+                
             default:
                 break
             }
         }
         // you must call the completion handler when you're done
         completionHandler()
+    }
+    
+    func setAlert(title: String, message: String){
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 }
 
