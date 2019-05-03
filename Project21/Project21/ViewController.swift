@@ -37,7 +37,7 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
     
     // content (what to show), a trigger (when to show it), and a request (the combination of content and trigger.)
     @objc func scheduleLocalTapped(){
-        scheduleLocal(time: 5)
+        scheduleLocal(time: 3)
     }
      func scheduleLocal(time: Double = 5.0){
         registerCategories()
@@ -107,9 +107,10 @@ class ViewController: UIViewController, UNUserNotificationCenterDelegate {
             case "action2":
                 setAlert(title: "Show action 2", message: "Hello!!!")
             //CHAllenge 2: Remind me later
+                // when tap on "Remind me later" button
             case "action3":
                 // 2s for testing , not 24hours
-                scheduleLocal(time: 2)
+                scheduleLocal(time: 3)
                 
             default:
                 break
