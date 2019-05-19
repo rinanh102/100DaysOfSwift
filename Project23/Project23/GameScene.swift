@@ -117,6 +117,10 @@ class GameScene: SKScene {
         // add to the array
         activeSlicePoints.append(location)
         redrawActiveSlice()
+        
+        if !isSwooshSoundActive {
+            playSwooshSound()
+        }
     }
     
     // When the user finishes touching the screen, touchesEnded() will be called.
@@ -152,8 +156,20 @@ class GameScene: SKScene {
         //Finally, it needs to update the slice shape paths so they get drawn using their designs – i.e., line width and color
         activeSliceFG.path = path.cgPath
         activeSliceBG.path = path.cgPath
+    }
+    
+    func playSwooshSound(){
+        isSwooshSoundActive = true
         
-       
+        let randomNumber = Int.random(in: 1...3)
+        let soundName = "swoosh\(randomNumber).caf"
+        
+        let swooshSound = SKAction.playSoundFileNamed(soundName, waitForCompletion: true)
+        
+        run(swooshSound){
+            [weak self] in
+            self?.isSwooshSoundActive = false
+        }
     }
     
    
