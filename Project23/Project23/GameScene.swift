@@ -153,7 +153,76 @@ class GameScene: SKScene {
         if !isSwooshSoundActive {
             playSwooshSound()
         }
+        
+        //
+        let nodeAtPoint = nodes(at: location)
+        
+        for case let node as SKSpriteNode in nodeAtPoint {
+            if node.name == "enemy" {
+                //TODO: destroy penguin
+                
+                // 1. Create a particle effect over the penguin.
+                if let emitter = SKEmitterNode(fileNamed: "sliceHitEnemy") {
+                    emitter.position = node.position
+                    addChild(emitter)
+                }
+                
+                // 2. Clear its node name so that it can't be swiped repeatedly.
+                node.name = ""
+                
+                // 3. Disable the isDynamic of its physics body so that it doesn't carry on falling.
+                node.physicsBody?.isDynamic = false
+                
+                // 4. Make the penguin scale out and fade out at the same time.
+                let scaleOut = SKAction.scale(to: 0.001, duration: 0.2)
+                let fadeOut = SKAction.fadeOut(withDuration: 0.2)
+                let group = SKAction.group([scaleOut, fadeOut])
+                
+                // 5. After making the penguin scale out and fade out, we should remove it from the scene.
+                let seq = SKAction.sequence([group, .removeFromParent()])
+                node.run(seq)
+                
+                //6. Add one to the player's score.
+                score += 1
+                
+                // 7. Remove the enemy from our activeEnemies array.
+                if let index = activeEnemies.firstIndex(of: node) {
+                    activeEnemies.remove(at: index)
+                }
+                
+                // 8. Play a sound so the player knows they hit the penguin.
+                run(SKAction.playSoundFileNamed("whack.caf", waitForCompletion: false))
+                
+            } else if node.name == "bomb" {
+                //TODO: destroy bomb
+                guard let bombContainer = node.parent as? SKSpriteNode else { continue }
+                if let emitter = SKEmitterNode(fileNamed: "sliceHitBomb") {
+                    emitter.position = bombContainer.position
+                    addChild(emitter)
+                }
+                
+                node.name = ""
+                bombContainer.physicsBody?.isDynamic = false
+                
+                let scaleOut = SKAction.scale(to: 0.001, duration: 0.2)
+                let fadeOut = SKAction.fadeOut(withDuration: 0.2)
+                let group = SKAction.group([scaleOut, fadeOut])
+                
+                let seq = SKAction.sequence([group, .removeFromParent()])
+                bombContainer.run(seq)
+                
+                if let index = activeEnemies.firstIndex(of: bombContainer) {
+                    activeEnemies.remove(at: index)
+                }
+                
+                run(SKAction.playSoundFileNamed("explosion.caf", waitForCompletion: false))
+                endGame()
+                
+            }
+        }
     }
+    
+
     
     // When the user finishes touching the screen, touchesEnded() will be called.
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -351,8 +420,20 @@ class GameScene: SKScene {
         if activeEnemies.count > 0 {
             for (index, node) in activeEnemies.enumerated().reversed() {
                 if node.position.y < -140 {
-                    node.removeFromParent()
-                    activeEnemies.remove(at: index)
+                    node.removeAllActions()
+                    
+                    if node.name == "enemy" {
+                        node.name = ""
+                        subtractLife()
+                        
+                        node.removeFromParent()
+                        activeEnemies.remove(at: index)
+                    } else if node.name == "bombContainer" {
+                        node.name = ""
+                        node.removeFromParent()
+                        activeEnemies.remove(at: index)
+                    }
+                    
                 }
             }
         } else {
@@ -379,7 +460,14 @@ class GameScene: SKScene {
             bombSoundEffect = nil
         }
     }
+   
+    func endGame(){
+        
+    }
     
+    func subtractLife(){
+        
+    }
     
    
 }
