@@ -13,7 +13,7 @@ class GameScene: SKScene {
     
     // CaseIterable. This is one of Swift’s most useful protocols, and it will automatically add an allCases property to the SequenceType enum that lists all its cases as an array. This is really useful in our project because we can then use randomElement() to pick random sequence types to run our game.
     enum SequenceType : CaseIterable{
-        case oneNoBomb, one, twoWithOneBomb, two, three, four, chain, fastChain
+        case oneNoBomb, one, twoWithOneBomb, two, three, four, chain, fastChain, fastMoving
     }
     // a new enum that tracks what kind of enemy should be created: should we force a bomb always, should we force a bomb never, or use the default randomization?
     enum ForceBomb{
@@ -21,6 +21,7 @@ class GameScene: SKScene {
     }
     
     var gameScore : SKLabelNode!
+    var someThing : SKLabelNode!
     var score = 0 {
         didSet{
             gameScore.text = "Score: \(score)"
@@ -45,7 +46,7 @@ class GameScene: SKScene {
     //  an AVAudioPlayer property for our class that will store a sound just for bomb fuses so that we can stop it as needed.
     var bombSoundEffect : AVAudioPlayer?
     
-    //TODO: properties foe sequence
+    //TODO: properties for sequence
     var popupTime = 0.9  // the amount of time to wait between the last enemy being destroyed and a new one being created
     var sequence = [SequenceType]() // an array of our SequenceType enum that defines what enemies to create.
     var sequencePosition = 0 // is where we are right now in the game
@@ -53,6 +54,20 @@ class GameScene: SKScene {
     var nextSequenceQueued = true // is used so we know when all the enemies are destroyed and we're ready to create more.
 
     var isGameEnd = false
+    //MARK: CHALLENGE 1: Properties
+    var screenWidth : CGFloat = 1024.0
+    var randomLowVelocity : Int {
+        return Int.random(in: 3...5)
+    }
+    var randomHighVelocity : Int {
+        return Int.random(in: 8...15)
+    }
+    
+    //MARK: challenge 2 Properties
+    var isFast = false
+    
+    //MARK: Challenge 3 Properties
+    var gameOver : SKLabelNode!
     
     override func didMove(to view: SKView) {
         let background = SKSpriteNode(imageNamed: "sliceBackground")
@@ -64,12 +79,13 @@ class GameScene: SKScene {
         //The default gravity of our physics world is -0.98, which is roughly equivalent to Earth's gravity. I'm using a slightly lower value so that items stay up in the air a bit longer.
         physicsWorld.gravity = CGVector(dx: 0, dy: -6)
         physicsWorld.speed = 0.85
-
+//        createGameOver()
         createScore()
         createLives()
         createSlices()
         
-        sequence = [ .oneNoBomb, .oneNoBomb, .twoWithOneBomb, .twoWithOneBomb, .three , .one, .chain]
+        
+        sequence = [ .oneNoBomb, .one, .twoWithOneBomb, .twoWithOneBomb, .three , .one, .chain, .fastMoving]
         
         for _ in 0...1000 {
             if let nextSequence = SequenceType.allCases.randomElement() {
@@ -88,6 +104,18 @@ class GameScene: SKScene {
         
         gameScore.position = CGPoint(x: 10, y: 10)
         score = 0
+        
+       
+    }
+    func createGameOver(){
+        gameOver = SKLabelNode(fontNamed: "Chalkduster")
+        gameOver.text = "Game Over"
+        gameOver.position = CGPoint(x: 512, y: 384)
+        gameOver.horizontalAlignmentMode = .center
+        gameOver.fontSize = 100
+        gameOver.zPosition = 2
+        addChild(gameOver)
+        print("gameover")
     }
     
     func createLives(){
@@ -99,6 +127,7 @@ class GameScene: SKScene {
             livesImage.append(spriteNode)
         }
     }
+    
     //MARK:
     func createSlices(){
         //TODO: Drawing a shape in SpriteKit
@@ -118,6 +147,8 @@ class GameScene: SKScene {
         addChild(activeSliceFG)
         
     }
+    
+ 
     
     //
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -186,7 +217,14 @@ class GameScene: SKScene {
                 node.run(seq)
                 
                 //6. Add one to the player's score.
-                score += 1
+                // Challenge 2: double score
+                if isFast {
+                    score += 2
+                    isFast = false
+                    print("DOUBLE SCORE!============")
+                } else {
+                    score += 1
+                }
                 
                 // 7. Remove the enemy from our activeEnemies array.
                 if let index = activeEnemies.firstIndex(of: node) {
@@ -277,7 +315,9 @@ class GameScene: SKScene {
     }
     
     //Accept a parameter of whether we want to force a bomb, not force a bomb, or just be random.
-    func createEnemy(forceBomb : ForceBomb = .random){
+    //MARK: Challenge 2
+    // Challenge 2: Add a parameter speedType to control the fast-moving type
+    func createEnemy(forceBomb : ForceBomb = .random, speedType : Int = 1){
         let enemy : SKSpriteNode
         
         var enemyType = Int.random(in: 1...6)
@@ -336,14 +376,14 @@ class GameScene: SKScene {
         let randomXVelocity : Int
         
         //3. Create a random X velocity (how far to move horizontally) that takes into account the enemy's position.
-        if randomPosition.x < 256 {
-            randomXVelocity = Int.random(in: 8...15)
-        } else if randomPosition.x < 512 {
-                randomXVelocity = Int.random(in: 3...5)
-        } else if randomPosition.x < 768{
-            randomXVelocity = -Int.random(in: 3...5)
+        if randomPosition.x < screenWidth * 0.25 {
+            randomXVelocity = randomHighVelocity * speedType
+        } else if randomPosition.x < screenWidth * 0.5 {
+                randomXVelocity = randomLowVelocity * speedType
+        } else if randomPosition.x < screenWidth * 0.75 {
+            randomXVelocity = -randomLowVelocity * speedType
         } else {
-            randomXVelocity = -Int.random(in: 8...15)
+            randomXVelocity = -randomHighVelocity * speedType
         }
         
         //4. Create a random Y velocity just to make things fly at different speeds.
@@ -411,6 +451,12 @@ class GameScene: SKScene {
             DispatchQueue.main.asyncAfter(deadline: .now() + (chainDelay / 10.0 * 2)){ [weak self] in self?.createEnemy()}
             DispatchQueue.main.asyncAfter(deadline: .now() + (chainDelay / 10.0 * 3)){ [weak self] in self?.createEnemy()}
             DispatchQueue.main.asyncAfter(deadline: .now() + (chainDelay / 10.0 * 4)){ [weak self] in self?.createEnemy()}
+          
+        // Challenge 2: increase speed double
+        case .fastMoving:
+            createEnemy(speedType: 2)
+            isFast = true
+            print("FAST!---------------------")
             
         }
         sequencePosition += 1
@@ -466,6 +512,7 @@ class GameScene: SKScene {
     }
    
     func endGame(triggeredByBomb: Bool) {
+        
         if isGameEnd {
             return
         }
@@ -473,6 +520,8 @@ class GameScene: SKScene {
         isGameEnd = true
         physicsWorld.speed = 0
         isUserInteractionEnabled = false
+        createGameOver()
+       
         
         bombSoundEffect?.stop()
         bombSoundEffect = nil
